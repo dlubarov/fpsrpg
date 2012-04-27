@@ -10,6 +10,7 @@ public class NewAccountHandler {
 
     private static void err(NewAccountErrorMessage.Cause cause) {
         NewAccountErrorMessage msg = new NewAccountErrorMessage(cause);
+        // FIXME send error
     }
 
     public void handle(NewAccountMessage msg) {
@@ -24,7 +25,7 @@ public class NewAccountHandler {
         else if (Account.byUsername.containsKey(msg.username))
             err(NewAccountErrorMessage.Cause.USERNAME_TAKEN);
         else {
-            // TODO send welcome
+            // FIXME send welcome
             new Account(msg.username, msg.password);
         }
     }

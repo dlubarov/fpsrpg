@@ -17,7 +17,8 @@ public class SerializationTest extends Test {
 
     private String randomString(double expectedLen) {
         StringBuilder sb = new StringBuilder();
-        while (rng.nextDouble() > 1.0/expectedLen)
+        double pContinue = expectedLen / (1 + expectedLen); // math...
+        while (rng.nextDouble() < pContinue)
             sb.append(randomChar());
         return sb.toString();
     }

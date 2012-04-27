@@ -5,12 +5,23 @@ import static java.lang.Math.*;
 import java.util.Arrays;
 
 public class Vector3 {
+    public static final Vector3 ZERO = new Vector3(0, 0, 0);
+
     public final double x, y, z;
 
     public Vector3(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public double get(int d) {
+        switch (d) {
+            case 0: return x;
+            case 1: return y;
+            case 2: return z;
+            default: throw new IllegalArgumentException();
+        }
     }
 
     public double[] components() {
@@ -45,6 +56,10 @@ public class Vector3 {
         return new Vector3(x*s, y*s, z*s);
     }
 
+    public Vector3 averagedWith(Vector3 that) {
+        return plus(that).scaled(0.5);
+    }
+
     public double dot(Vector3 that) {
         return x*that.x + y*that.y + z*that.z;
     }
@@ -59,6 +74,11 @@ public class Vector3 {
 
     public NormalizedVector3 normalized() {
         return NormalizedVector3.from(this);
+    }
+
+    // The Euclidean distance to another vector.
+    public double distanceTo(Vector3 that) {
+        return minus(that).norm();
     }
 
     @Override
