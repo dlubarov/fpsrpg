@@ -1,9 +1,10 @@
 package game;
 
 import math.*;
-import phys.Body;
+import phys.*;
 
-public abstract class Player extends Body {
+public abstract class Player extends Body implements Positioned {
+    @Override
     public abstract Vector3 getPos();
 
     @Override

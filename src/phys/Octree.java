@@ -105,7 +105,7 @@ public final class Octree extends Broadphase {
         return new AAB(center.minus(rrr), center.plus(rrr));
     }
 
-    public void addNeighborsTo(Body src, Collection<Body> result) {
+    private void addNeighborsTo(Body src, Collection<Body> result) {
         AAB srcBB = src.getShape().boundingBox();
         if (!boundingBox().intersects(srcBB))
             return;
