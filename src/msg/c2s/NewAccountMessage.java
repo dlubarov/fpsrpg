@@ -1,6 +1,5 @@
 package msg.c2s;
 
-import msg.MessageType;
 import ser.*;
 
 // A new account request.
@@ -9,7 +8,7 @@ public class NewAccountMessage extends ClientMessage {
     public final String username, password;
 
     public NewAccountMessage(String username, String password) {
-        super(MessageType.NEW_ACCOUNT);
+        super(MySerializer.singleton);
         this.username = username;
         this.password = password;
     }
@@ -24,28 +23,15 @@ public class NewAccountMessage extends ClientMessage {
         private MySerializer() {}
 
         @Override
-        public byte[] serialize(NewAccountMessage msg) {
-            ByteBuilder buf = new ByteBuilder();
-            buf.add((byte) MessageType.NEW_ACCOUNT.ordinal());
-            byte[] usernameData = UTF8Serializer.singleton.serialize(msg.username),
-                   passwordData = UTF8Serializer.singleton.serialize(msg.password);
-            buf.addAll(IntegerSerializer.singleton.serialize(usernameData.length));
-            buf.addAll(usernameData);
-            buf.addAll(IntegerSerializer.singleton.serialize(passwordData.length));
-            buf.addAll(passwordData);
-            return buf.getContents();
+        public void serialize(NewAccountMessage msg, ByteSink sink) {
+            UTF8Serializer.singleton.serialize(msg.username, sink);
+            UTF8Serializer.singleton.serialize(msg.password, sink);
         }
 
         @Override
-        public NewAccountMessage deserialize(byte[] data, int offset, int len) {
-            int usernameLen = IntegerSerializer.singleton.deserialize(data, offset, 4);
-            offset += 4;
-            String username = UTF8Serializer.singleton.deserialize(data, offset, usernameLen);
-            offset += usernameLen;
-            int passwordLen = IntegerSerializer.singleton.deserialize(data, offset, 4);
-            offset += 4;
-            String password = UTF8Serializer.singleton.deserialize(data, offset, passwordLen);
-            offset += passwordLen;
+        public NewAccountMessage deserialize(ByteSource source) {
+            String username = UTF8Serializer.singleton.deserialize(source),
+                   password = UTF8Serializer.singleton.deserialize(source);
             return new NewAccountMessage(username, password);
         }
     }

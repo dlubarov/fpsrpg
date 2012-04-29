@@ -1,7 +1,6 @@
 package msg.s2c;
 
 import math.Vector3;
-import msg.MessageType;
 import ser.*;
 
 public class PeerUpdateMessage extends ServerMessage {
@@ -9,7 +8,7 @@ public class PeerUpdateMessage extends ServerMessage {
     public final Vector3 position;
 
     public PeerUpdateMessage(int id, Vector3 position) {
-        super(MessageType.PEER_INRODUCTION);
+        super(MySerializer.singleton);
         this.id = id;
         this.position = position;
     }
@@ -24,19 +23,15 @@ public class PeerUpdateMessage extends ServerMessage {
         private MySerializer() {}
 
         @Override
-        public byte[] serialize(PeerUpdateMessage msg) {
-            ByteBuilder buf = new ByteBuilder();
-            buf.add((byte) MessageType.PEER_INRODUCTION.ordinal());
-            buf.addAll(IntegerSerializer.singleton.serialize(msg.id));
-            buf.addAll(Vector3Serializer.singleton.serialize(msg.position));
-            return buf.getContents();
+        public void serialize(PeerUpdateMessage msg, ByteSink sink) {
+            IntegerSerializer.singleton.serialize(msg.id, sink);
+            Vector3Serializer.singleton.serialize(msg.position, sink);
         }
 
         @Override
-        public PeerUpdateMessage deserialize(byte[] data, int offset, int len) {
-            int id = IntegerSerializer.singleton.deserialize(data, offset, 4);
-            offset += 4;
-            Vector3 position = Vector3Serializer.singleton.deserialize(data, offset, 24);
+        public PeerUpdateMessage deserialize(ByteSource source) {
+            int id = IntegerSerializer.singleton.deserialize(source);
+            Vector3 position = Vector3Serializer.singleton.deserialize(source);
             return new PeerUpdateMessage(id, position);
         }
     }

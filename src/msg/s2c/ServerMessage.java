@@ -4,15 +4,16 @@ import java.net.*;
 
 import msg.*;
 
+import ser.Serializer;
 import server.*;
 
 public abstract class ServerMessage extends Message {
-    protected ServerMessage(MessageType type) {
-        super(type);
+    protected ServerMessage(Serializer<? extends Message> serializer) {
+        super(serializer);
     }
 
     public void sendTo(InetAddress clientAddr) {
-        Server.sendClient(serialize(), clientAddr);
+        Server.sendClient(serializeWithType(), clientAddr);
     }
 
     public void sendTo(Account account) {

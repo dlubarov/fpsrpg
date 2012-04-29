@@ -1,13 +1,12 @@
 package msg.s2c;
 
-import msg.MessageType;
 import ser.*;
 
 public class PeerGoodbyeMessage extends ServerMessage {
     public final int id;
 
     public PeerGoodbyeMessage(int id) {
-        super(MessageType.PEER_INRODUCTION);
+        super(MySerializer.singleton);
         this.id = id;
     }
 
@@ -21,13 +20,13 @@ public class PeerGoodbyeMessage extends ServerMessage {
         private MySerializer() {}
 
         @Override
-        public byte[] serialize(PeerGoodbyeMessage msg) {
-            return IntegerSerializer.singleton.serialize(msg.id);
+        public void serialize(PeerGoodbyeMessage msg, ByteSink sink) {
+            IntegerSerializer.singleton.serialize(msg.id, sink);
         }
 
         @Override
-        public PeerGoodbyeMessage deserialize(byte[] data, int offset, int len) {
-            int id = IntegerSerializer.singleton.deserialize(data, offset, len);
+        public PeerGoodbyeMessage deserialize(ByteSource source) {
+            int id = IntegerSerializer.singleton.deserialize(source);
             return new PeerGoodbyeMessage(id);
         }
     }

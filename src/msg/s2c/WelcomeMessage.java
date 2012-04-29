@@ -1,14 +1,18 @@
 package msg.s2c;
 
+import env.Realm;
 import ser.*;
-import msg.MessageType;
 
 public class WelcomeMessage extends ServerMessage {
     public final int realmID;
 
-    protected WelcomeMessage(int realmID) {
-        super(MessageType.WELCOME);
+    public WelcomeMessage(int realmID) {
+        super(MySerializer.singleton);
         this.realmID = realmID;
+    }
+
+    public WelcomeMessage(Realm realm) {
+        this(realm.id);
     }
 
     @Override
@@ -21,13 +25,13 @@ public class WelcomeMessage extends ServerMessage {
         private MySerializer() {}
 
         @Override
-        public byte[] serialize(WelcomeMessage msg) {
-            return IntegerSerializer.singleton.serialize(msg.realmID);
+        public void serialize(WelcomeMessage msg, ByteSink sink) {
+            IntegerSerializer.singleton.serialize(msg.realmID, sink);
         }
 
         @Override
-        public WelcomeMessage deserialize(byte[] data, int offset, int len) {
-            int realmID = IntegerSerializer.singleton.deserialize(data, offset, len);
+        public WelcomeMessage deserialize(ByteSource source) {
+            int realmID = IntegerSerializer.singleton.deserialize(source);
             return new WelcomeMessage(realmID);
         }
     }

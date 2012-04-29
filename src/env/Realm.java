@@ -13,10 +13,10 @@ public abstract class Realm {
     };
 
     public final int id;
-    //public final Broadphase broadphase;
+    public final Broadphase broadphase;
 
     protected Realm(double size) {
         id = nextID.getAndIncrement();
-        //broadphase = new Octree(Vector3.ZERO, size);
+        broadphase = new Octree(Vector3.ZERO, size);
     }
 }

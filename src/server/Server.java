@@ -5,13 +5,14 @@ import java.net.*;
 
 import net.NetConfig;
 
-import server.hand.NewAccountHandler;
+import ser.ByteSource;
+import server.hand.*;
 
 import msg.*;
-import msg.c2s.NewAccountMessage;
+import msg.c2s.*;
 
 public class Server {
-    private final static DatagramSocket sock;
+    private static final DatagramSocket sock;
 
     static {
         try {
@@ -36,18 +37,11 @@ public class Server {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             sock.receive(receivePacket);
             InetAddress clientAddr = receivePacket.getAddress();
-            Message msg = MessageSerializer.singleton.deserialize(
-                    receivePacket.getData(),
-                    receivePacket.getOffset(),
-                    receivePacket.getLength());
+            ByteSource data = new ByteSource(receivePacket.getData(),
+                    receivePacket.getOffset(), receivePacket.getLength());
+            Message msg = TypedMessageSerializer.singleton.deserialize(data);
 
-            switch (msg.type) {
-                case NEW_ACCOUNT:
-                    NewAccountHandler.singleton.handle((NewAccountMessage) msg, clientAddr);
-                    break;
-                default:
-                    throw new AssertionError("Forgot a case?");
-            }
+            HandlerManager.singleton.forward((ClientMessage) msg, clientAddr);
         }
     }
 }

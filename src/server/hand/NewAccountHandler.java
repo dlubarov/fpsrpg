@@ -5,17 +5,21 @@ import java.net.InetAddress;
 import net.NetConfig;
 import server.Account;
 import msg.c2s.NewAccountMessage;
-import msg.s2c.NewAccountErrorMessage;
+import msg.s2c.*;
 
-public class NewAccountHandler {
+public class NewAccountHandler extends ClientMessageHandler<NewAccountMessage> {
     public static final NewAccountHandler singleton = new NewAccountHandler();
-    private NewAccountHandler() {}
+
+    private NewAccountHandler() {
+        super(NewAccountMessage.class);
+    }
 
     private static void err(NewAccountErrorMessage.Cause cause, InetAddress clientAddr) {
         NewAccountErrorMessage msg = new NewAccountErrorMessage(cause);
         msg.sendTo(clientAddr);
     }
 
+    @Override
     public void handle(NewAccountMessage msg, InetAddress sender) {
         if (msg.username.length() < NetConfig.USERNAME_MIN_LEN)
             err(NewAccountErrorMessage.Cause.USERNAME_SHORT, sender);
@@ -28,8 +32,8 @@ public class NewAccountHandler {
         else if (Account.byUsername.containsKey(msg.username))
             err(NewAccountErrorMessage.Cause.USERNAME_TAKEN, sender);
         else {
-            // FIXME send welcome
-            new Account(msg.username, msg.password, sender);
+            Account acc = new Account(sender, msg.username, msg.password);
+            new WelcomeMessage(acc.realm).sendTo(acc);
         }
     }
 }

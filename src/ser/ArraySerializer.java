@@ -8,29 +8,19 @@ public class ArraySerializer<T> extends Serializer<T[]> {
     }
 
     @Override
-    public byte[] serialize(T[] arr) {
-        ByteBuilder buf = new ByteBuilder();
-        buf.addAll(IntegerSerializer.singleton.serialize(arr.length));
-        for (T elem : arr) {
-            byte[] elemData = elementSerializer.serialize(elem);
-            buf.addAll(IntegerSerializer.singleton.serialize(elemData.length));
-            buf.addAll(elemData);
-        }
-        return buf.getContents();
+    public void serialize(T[] arr, ByteSink sink) {
+        IntegerSerializer.singleton.serialize(arr.length, sink);
+        for (T elem : arr)
+            elementSerializer.serialize(elem, sink);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T[] deserialize(byte[] data, int offset, int len) {
-        int n = IntegerSerializer.singleton.deserialize(data, offset, 4);
-        offset += 4;
+    public T[] deserialize(ByteSource source) {
+        int n = IntegerSerializer.singleton.deserialize(source);
+        @SuppressWarnings("unchecked")
         T[] arr = (T[]) new Object[n];
-        for (int i = 0; i < n; ++i) {
-            int elemLen = IntegerSerializer.singleton.deserialize(data, offset, 4);
-            offset += 4;
-            arr[i] = elementSerializer.deserialize(data, offset, elemLen);
-            offset += elemLen;
-        }
+        for (int i = 0; i < n; ++i)
+            arr[i] = elementSerializer.deserialize(source);
         return arr;
     }
 }

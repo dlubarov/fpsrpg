@@ -1,11 +1,20 @@
 package ser;
 
 public abstract class Serializer<T> {
-    public abstract byte[] serialize(T object);
+    public abstract void serialize(T object, ByteSink sink);
 
-    public abstract T deserialize(byte[] data, int offset, int len);
+    public abstract T deserialize(ByteSource source);
+
+    public final byte[] serialize(T object) {
+        ByteSink sink = new ByteSink();
+        serialize(object, sink);
+        return sink.getContents();
+    }
 
     public final T deserialize(byte[] data) {
-        return deserialize(data, 0, data.length);
+        ByteSource source = new ByteSource(data);
+        T result = deserialize(source);
+        assert source.numBytesRemaining() == 0;
+        return result;
     }
 }

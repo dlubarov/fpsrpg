@@ -1,20 +1,20 @@
 package ser;
 
-// Big-endian serialization for (64-bit) long integers.
+// Serialization for (64-bit) double precision floats.
+
 public class DoubleSerializer extends Serializer<Double> {
     public static final DoubleSerializer singleton = new DoubleSerializer();
     private DoubleSerializer() {}
 
     @Override
-    public byte[] serialize(Double x) {
+    public void serialize(Double x, ByteSink sink) {
         long l = Double.doubleToLongBits(x);
-        return LongSerializer.singleton.serialize(l);
+        LongSerializer.singleton.serialize(l);
     }
 
     @Override
-    public Double deserialize(byte[] data, int offset, int len) {
-        assert len == 8;
-        long l = LongSerializer.singleton.deserialize(data, offset, len);
+    public Double deserialize(ByteSource source) {
+        long l = LongSerializer.singleton.deserialize(source);
         return Double.longBitsToDouble(l);
     }
 }

@@ -1,14 +1,16 @@
 package msg;
 
-public abstract class Message {
-    public final MessageType type;
+import ser.Serializer;
 
-    protected Message(MessageType type) {
-        this.type = type;
+public abstract class Message {
+    public final Serializer<? extends Message> serializer;
+
+    protected Message(Serializer<? extends Message> serializer) {
+        this.serializer = serializer;
     }
 
-    public final byte[] serialize() {
-        return MessageSerializer.singleton.serialize(this);
+    public final byte[] serializeWithType() {
+        return TypedMessageSerializer.singleton.serialize(this);
     }
 
     @Override

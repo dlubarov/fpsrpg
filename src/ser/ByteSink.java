@@ -1,10 +1,10 @@
 package ser;
 
-public final class ByteBuilder {
+public final class ByteSink {
     private byte[] data;
     private int len;
 
-    public ByteBuilder() {
+    public ByteSink() {
         data = new byte[4];
         len = 0;
     }

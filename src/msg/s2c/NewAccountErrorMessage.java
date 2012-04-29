@@ -1,13 +1,12 @@
 package msg.s2c;
 
-import msg.MessageType;
 import ser.*;
 
 public class NewAccountErrorMessage extends ServerMessage {
     public final Cause cause;
 
     public NewAccountErrorMessage(Cause cause) {
-        super(MessageType.NEW_ACCOUNT_ERROR);
+        super(MySerializer.singleton);
         this.cause = cause;
     }
 
@@ -27,13 +26,13 @@ public class NewAccountErrorMessage extends ServerMessage {
         private MySerializer() {}
 
         @Override
-        public byte[] serialize(NewAccountErrorMessage msg) {
-            return IntegerSerializer.singleton.serialize(msg.cause.ordinal());
+        public void serialize(NewAccountErrorMessage msg, ByteSink sink) {
+            IntegerSerializer.singleton.serialize(msg.cause.ordinal(), sink);
         }
 
         @Override
-        public NewAccountErrorMessage deserialize(byte[] data, int offset, int len) {
-            int causeOrd = IntegerSerializer.singleton.deserialize(data, offset, len);
+        public NewAccountErrorMessage deserialize(ByteSource source) {
+            int causeOrd = IntegerSerializer.singleton.deserialize(source);
             try {
                 Cause cause = Cause.values()[causeOrd];
                 return new NewAccountErrorMessage(cause);
