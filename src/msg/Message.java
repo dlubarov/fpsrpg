@@ -7,6 +7,10 @@ public abstract class Message {
         this.type = type;
     }
 
+    public final byte[] serialize() {
+        return MessageSerializer.singleton.serialize(this);
+    }
+
     @Override
     public abstract String toString();
 }

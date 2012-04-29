@@ -1,32 +1,35 @@
 package server.hand;
 
+import java.net.InetAddress;
+
 import net.NetConfig;
 import server.Account;
-import msg.*;
+import msg.c2s.NewAccountMessage;
+import msg.s2c.NewAccountErrorMessage;
 
 public class NewAccountHandler {
     public static final NewAccountHandler singleton = new NewAccountHandler();
     private NewAccountHandler() {}
 
-    private static void err(NewAccountErrorMessage.Cause cause) {
+    private static void err(NewAccountErrorMessage.Cause cause, InetAddress clientAddr) {
         NewAccountErrorMessage msg = new NewAccountErrorMessage(cause);
-        // FIXME send error
+        msg.sendTo(clientAddr);
     }
 
-    public void handle(NewAccountMessage msg) {
+    public void handle(NewAccountMessage msg, InetAddress sender) {
         if (msg.username.length() < NetConfig.USERNAME_MIN_LEN)
-            err(NewAccountErrorMessage.Cause.USERNAME_SHORT);
+            err(NewAccountErrorMessage.Cause.USERNAME_SHORT, sender);
         else if (msg.username.length() > NetConfig.USERNAME_MAX_LEN)
-            err(NewAccountErrorMessage.Cause.USERNAME_LONG);
+            err(NewAccountErrorMessage.Cause.USERNAME_LONG, sender);
         else if (msg.password.length() < NetConfig.PASSWORD_MIN_LEN)
-            err(NewAccountErrorMessage.Cause.PASSWORD_SHORT);
+            err(NewAccountErrorMessage.Cause.PASSWORD_SHORT, sender);
         else if (msg.password.length() > NetConfig.PASSWORD_MAX_LEN)
-            err(NewAccountErrorMessage.Cause.PASSWORD_LONG);
+            err(NewAccountErrorMessage.Cause.PASSWORD_LONG, sender);
         else if (Account.byUsername.containsKey(msg.username))
-            err(NewAccountErrorMessage.Cause.USERNAME_TAKEN);
+            err(NewAccountErrorMessage.Cause.USERNAME_TAKEN, sender);
         else {
             // FIXME send welcome
-            new Account(msg.username, msg.password);
+            new Account(msg.username, msg.password, sender);
         }
     }
 }

@@ -1,8 +1,9 @@
-package msg;
+package msg.s2c;
 
+import msg.MessageType;
 import ser.*;
 
-public class NewAccountErrorMessage extends Message {
+public class NewAccountErrorMessage extends ServerMessage {
     public final Cause cause;
 
     public NewAccountErrorMessage(Cause cause) {

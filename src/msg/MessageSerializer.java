@@ -1,5 +1,7 @@
 package msg;
 
+import msg.c2s.NewAccountMessage;
+import msg.s2c.*;
 import ser.Serializer;
 
 public final class MessageSerializer extends Serializer<Message> {
@@ -11,6 +13,16 @@ public final class MessageSerializer extends Serializer<Message> {
         switch (msg.type) {
             case NEW_ACCOUNT:
                 return NewAccountMessage.MySerializer.singleton.serialize((NewAccountMessage) msg);
+            case NEW_ACCOUNT_ERROR:
+                return NewAccountErrorMessage.MySerializer.singleton.serialize((NewAccountErrorMessage) msg);
+            case WELCOME:
+                return WelcomeMessage.MySerializer.singleton.serialize((WelcomeMessage) msg);
+            case PEER_INRODUCTION:
+                return PlayerIntroductionMessage.MySerializer.singleton.serialize((PlayerIntroductionMessage) msg);
+            case PEER_UPDATE:
+                return PeerUpdateMessage.MySerializer.singleton.serialize((PeerUpdateMessage) msg);
+            case PEER_GOODBYE:
+                return PeerGoodbyeMessage.MySerializer.singleton.serialize((PeerGoodbyeMessage) msg);
             default:
                 throw new AssertionError("Build a message with bad type.");
         }
@@ -31,6 +43,16 @@ public final class MessageSerializer extends Serializer<Message> {
         switch (type) {
             case NEW_ACCOUNT:
                 return NewAccountMessage.MySerializer.singleton.deserialize(data, offset, len);
+            case NEW_ACCOUNT_ERROR:
+                return NewAccountErrorMessage.MySerializer.singleton.deserialize(data, offset, len);
+            case WELCOME:
+                return WelcomeMessage.MySerializer.singleton.deserialize(data, offset, len);
+            case PEER_INRODUCTION:
+                ;
+            case PEER_UPDATE:
+                ;
+            case PEER_GOODBYE:
+                ;
             default:
                 throw new AssertionError("Forgot a case?");
         }

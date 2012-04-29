@@ -1,5 +1,10 @@
 package client;
 
+import java.io.IOException;
+import java.net.*;
+
+import net.NetConfig;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
@@ -9,6 +14,25 @@ import static org.lwjgl.opengl.GL11.*;
 
 public final class Client {
     private Client() {}
+
+    private static final DatagramSocket sock;
+
+    static {
+        try {
+            sock = new DatagramSocket(NetConfig.PORT_S2C, NetConfig.serverAddr);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void sendToServer(byte[] data) {
+        try {
+            sock.send(new DatagramPacket(data, data.length,
+                    NetConfig.serverAddr, NetConfig.PORT_C2S));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void logic() {
         while (Keyboard.next()) {

@@ -1,8 +1,11 @@
-package msg;
+package msg.c2s;
 
+import msg.MessageType;
 import ser.*;
 
-public class NewAccountMessage extends Message {
+// A new account request.
+
+public class NewAccountMessage extends ClientMessage {
     public final String username, password;
 
     public NewAccountMessage(String username, String password) {

@@ -1,9 +1,10 @@
-package msg;
+package msg.s2c;
 
 import math.Vector3;
+import msg.MessageType;
 import ser.*;
 
-public class PlayerIntroductionMessage extends Message {
+public class PlayerIntroductionMessage extends ServerMessage {
     public final String username;
     public final Vector3 position;
 

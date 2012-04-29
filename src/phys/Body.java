@@ -1,15 +1,18 @@
 package phys;
 
+import env.Realm;
 import math.Shape;
 
 public abstract class Body {
+    public Realm realm;
+
     public abstract Shape getShape();
 
     public void show() {
-        Broadphase.globalBroadphase.add(this);
+        realm.broadphase.add(this);
     }
 
     public void hide() {
-        Broadphase.globalBroadphase.remove(this);
+        realm.broadphase.remove(this);
     }
 }
