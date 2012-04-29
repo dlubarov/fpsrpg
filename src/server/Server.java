@@ -39,7 +39,7 @@ public class Server {
             InetAddress clientAddr = receivePacket.getAddress();
             ByteSource data = new ByteSource(receivePacket.getData(),
                     receivePacket.getOffset(), receivePacket.getLength());
-            Message msg = TypedMessageSerializer.singleton.deserialize(data);
+            Message msg = MessageSerializer.singleton.deserialize(data);
 
             HandlerManager.singleton.forward((ClientMessage) msg, clientAddr);
         }

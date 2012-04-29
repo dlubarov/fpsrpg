@@ -9,7 +9,7 @@ public class DoubleSerializer extends Serializer<Double> {
     @Override
     public void serialize(Double x, ByteSink sink) {
         long l = Double.doubleToLongBits(x);
-        LongSerializer.singleton.serialize(l);
+        LongSerializer.singleton.serialize(l, sink);
     }
 
     @Override

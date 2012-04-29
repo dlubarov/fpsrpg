@@ -1,15 +1,24 @@
 package msg;
 
-import msg.c2s.NewAccountMessage;
+import msg.c2s.*;
+import msg.s2c.*;
 import ser.*;
 
-public final class TypedMessageSerializer extends Serializer<Message> {
-    public static final TypedMessageSerializer singleton = new TypedMessageSerializer();
-    private TypedMessageSerializer() {}
+// Serializes a message WITH its message type.
+
+public final class MessageSerializer extends Serializer<Message> {
+    public static final MessageSerializer singleton = new MessageSerializer();
+    private MessageSerializer() {}
 
     @SuppressWarnings("unchecked")
     private static final Serializer<? extends Message>[] messageSerializers = new Serializer[] {
         NewAccountMessage.MySerializer.singleton,
+        MotionRequestMessage.MySerializer.singleton,
+        NewAccountErrorMessage.MySerializer.singleton,
+        PeerGoodbyeMessage.MySerializer.singleton,
+        PeerUpdateMessage.MySerializer.singleton,
+        PlayerIntroductionMessage.MySerializer.singleton,
+        WelcomeMessage.MySerializer.singleton,
     };
 
     // TODO: Use a map to avoid linear scan.

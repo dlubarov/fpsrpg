@@ -10,7 +10,7 @@ public abstract class Message {
     }
 
     public final byte[] serializeWithType() {
-        return TypedMessageSerializer.singleton.serialize(this);
+        return MessageSerializer.singleton.serialize(this);
     }
 
     @Override

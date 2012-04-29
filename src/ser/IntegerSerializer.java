@@ -17,7 +17,7 @@ public class IntegerSerializer extends Serializer<Integer> {
     public Integer deserialize(ByteSource source) {
         int x = 0;
         for (int i = 3; i >= 0; --i)
-            x |= (source.read() & 0xFF) << i;
+            x |= (source.read() & 0xFF) << 8 * i;
         return x;
     }
 }
