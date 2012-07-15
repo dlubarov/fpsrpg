@@ -18,7 +18,7 @@ public class NewAccountErrorMessage extends ServerMessage {
     public static enum Cause {
         USERNAME_SHORT, USERNAME_LONG,
         PASSWORD_SHORT, PASSWORD_LONG,
-        USERNAME_TAKEN;
+        USERNAME_TAKEN
     }
 
     public static class MySerializer extends Serializer<NewAccountErrorMessage> {

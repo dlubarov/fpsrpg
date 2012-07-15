@@ -17,6 +17,11 @@ public final class Client {
 
     private static final DatagramSocket sock;
 
+    private static final int targetFPS = 80;
+    private static long lastTime = System.nanoTime() - 1;
+    private static double averageFPS;
+    private static final double averageFPSDuration = 30;
+
     static {
         try {
             sock = new DatagramSocket(NetConfig.PORT_S2C, NetConfig.serverAddr);
@@ -37,10 +42,11 @@ public final class Client {
     private static void logic() {
         while (Keyboard.next()) {
             int key = Keyboard.getEventKey();
-            //boolean down = Keyboard.getEventKeyState();
+            boolean down = Keyboard.getEventKeyState();
             switch (key) {
                 case Keyboard.KEY_ESCAPE:
-                    System.exit(0);
+                    if (down)
+                        System.exit(0);
                     break;
             }
         }
@@ -56,7 +62,8 @@ public final class Client {
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        GLU.gluPerspective(60, Display.getWidth() / (float) Display.getHeight(),
+        GLU.gluPerspective(60,
+                Display.getWidth() / (float) Display.getHeight(),
                 1f, 500f);
 
         glMatrixMode(GL_MODELVIEW);
@@ -75,9 +82,17 @@ public final class Client {
 
     private static void mainLoop() {
         while (!Display.isCloseRequested()) {
+            long time = System.nanoTime();
+            double currentFPS = 1e9 / (time - lastTime);
+            averageFPS = averageFPS * (averageFPSDuration - 1) / averageFPSDuration
+                       + currentFPS / averageFPSDuration;
+            lastTime = time;
+            if (Math.random() < 0.1)
+                Display.setTitle(String.format("RPG (%.0f FPS)", averageFPS));
             logic();
             render();
             Display.update();
+            Display.sync(targetFPS);
         }
     }
 

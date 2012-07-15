@@ -7,8 +7,7 @@ public class IntegerSerializer extends Serializer<Integer> {
     private IntegerSerializer() {}
 
     @Override
-    public void serialize(Integer object, ByteSink sink) {
-        int x = object;
+    public void serialize(Integer x, ByteSink sink) {
         for (int i = 3; i >= 0; --i)
             sink.add((byte) (x >>> 8 * i));
     }

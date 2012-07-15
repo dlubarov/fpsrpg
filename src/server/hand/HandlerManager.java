@@ -9,7 +9,7 @@ public class HandlerManager {
     public static final HandlerManager singleton = new HandlerManager();
 
     static {
-        // Run static initializers.
+        // Force static initializers to be run.
         @SuppressWarnings("unused")
         Object[] handlers = new Object[] {
                 NewAccountHandler.singleton

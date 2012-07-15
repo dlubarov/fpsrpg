@@ -15,7 +15,7 @@ public class PeerUpdateMessage extends ServerMessage {
 
     @Override
     public String toString() {
-        return String.format("PeerUpdate(%d, %d)", id, position);
+        return String.format("PeerUpdate(%d, %s)", id, position);
     }
 
     public static class MySerializer extends Serializer<PeerUpdateMessage> {

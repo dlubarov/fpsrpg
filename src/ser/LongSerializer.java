@@ -7,8 +7,7 @@ public class LongSerializer extends Serializer<Long> {
     private LongSerializer() {}
 
     @Override
-    public void serialize(Long object, ByteSink sink) {
-        long x = object;
+    public void serialize(Long x, ByteSink sink) {
         for (int i = 7; i >= 0; --i)
             sink.add((byte) (x >>> 8 * i));
     }

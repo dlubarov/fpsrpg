@@ -16,7 +16,7 @@ public final class ActivePlayer extends Player {
     }
 
     public void addNeighbors(Collection<ActivePlayer> neighbors) {
-        
+        // FIXME
     }
 
     @Override
